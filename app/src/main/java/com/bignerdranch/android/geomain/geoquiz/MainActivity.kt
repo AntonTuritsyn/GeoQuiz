@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 
 private const val TAG = "MainActivity"
+private const val KEY_INDEX = "index"
 
 class MainActivity : AppCompatActivity() {
 
@@ -18,31 +19,29 @@ class MainActivity : AppCompatActivity() {
     private lateinit var nextButton: ImageButton
     private lateinit var prevButton: ImageButton
     private lateinit var questionTextView: TextView
-//    private lateinit var resultTextView: TextView
 
     private val quizViewModel: QuizViewModel by lazy {
         ViewModelProvider(this)[QuizViewModel::class.java]
     }
-
-//    private var result = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.d(TAG, "onCreate(Bundle? called)")
         setContentView(R.layout.activity_main)                                                              // в () идентификатор ресурса для обращения к ресурсу activity_main
 
+        val currentIndex = savedInstanceState?.getInt(KEY_INDEX) ?: 0
+        quizViewModel.currentIndex = currentIndex
+
 //        val provider: ViewModelProvider = ViewModelProviders.of(this)                                     // устарело
-       /* val provider = ViewModelProvider(this)                            // теперь так
-        val quizViewModel = provider[QuizViewModel::class.java]             // лениво инициализировали данное свойство выше
-        Log.d(TAG, "Got a QuizModel: $quizViewModel")*/
+        /* val provider = ViewModelProvider(this)                                                           // теперь так
+         val quizViewModel = provider[QuizViewModel::class.java]                                            // лениво инициализировали данное свойство выше
+         Log.d(TAG, "Got a QuizModel: $quizViewModel")*/
 
         trueButton = findViewById(R.id.true_button)
         falseButton = findViewById(R.id.false_button)
         nextButton = findViewById(R.id.next_button)
         prevButton = findViewById(R.id.prev_button)
         questionTextView = findViewById(R.id.question_text_view)
-//        resultTextView = findViewById(R.id.result_text_view)
-
 
         trueButton.setOnClickListener {
             // какое-то действие после нажатия. Слушатель сообщает о нажатии кнопки
@@ -87,7 +86,7 @@ class MainActivity : AppCompatActivity() {
             updateQuestion()
         }
 
-        /*val questionTextResId = questionBank[currentIndex].textResId                                      // !!!!! уточнить, как работает!!!!! понял    // объединяем в функцию
+        /*val questionTextResId = questionBank[currentIndex].textResId                                      // объединяем в функцию
         questionTextView.setText(questionTextResId)*/
         updateQuestion()
     }
@@ -105,6 +104,13 @@ class MainActivity : AppCompatActivity() {
     override fun onPause() {
         super.onPause()
         Log.d(TAG, "onPause() called")
+    }
+
+    override fun onSaveInstanceState(savedInstanceState: Bundle) {
+        super.onSaveInstanceState(savedInstanceState)
+        Log.i(TAG, "onSaveInstanceState")
+        savedInstanceState.putInt(KEY_INDEX, quizViewModel.currentIndex)
+
     }
 
     override fun onStop() {
@@ -133,7 +139,6 @@ class MainActivity : AppCompatActivity() {
 
         val messageResId = if (userAnswer == correctAnswer) {
             R.string.correct_toast
-//            result++
         } else {
             R.string.incorrect_toast
         }
