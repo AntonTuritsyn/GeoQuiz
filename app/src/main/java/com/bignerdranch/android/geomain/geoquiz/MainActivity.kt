@@ -1,5 +1,6 @@
 package com.bignerdranch.android.geomain.geoquiz
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -16,6 +17,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var trueButton: Button
     private lateinit var falseButton: Button
+    private lateinit var cheatButton: Button
     private lateinit var nextButton: ImageButton
     private lateinit var prevButton: ImageButton
     private lateinit var questionTextView: TextView
@@ -41,6 +43,7 @@ class MainActivity : AppCompatActivity() {
         falseButton = findViewById(R.id.false_button)
         nextButton = findViewById(R.id.next_button)
         prevButton = findViewById(R.id.prev_button)
+        cheatButton = findViewById(R.id.cheat_button)
         questionTextView = findViewById(R.id.question_text_view)
 
         trueButton.setOnClickListener {
@@ -80,6 +83,11 @@ class MainActivity : AppCompatActivity() {
             updateQuestion()
         }
 
+        cheatButton.setOnClickListener {
+            val intent = Intent(this, CheatActivity::class.java)
+            startActivity(intent)
+        }
+
         questionTextView.setOnClickListener {
             quizViewModel.moveToNext()
 //            currentIndex = (currentIndex + 1) % questionBank.size
@@ -110,7 +118,6 @@ class MainActivity : AppCompatActivity() {
         super.onSaveInstanceState(savedInstanceState)
         Log.i(TAG, "onSaveInstanceState")
         savedInstanceState.putInt(KEY_INDEX, quizViewModel.currentIndex)
-
     }
 
     override fun onStop() {
