@@ -34,11 +34,6 @@ class MainActivity : AppCompatActivity() {
         val currentIndex = savedInstanceState?.getInt(KEY_INDEX) ?: 0
         quizViewModel.currentIndex = currentIndex
 
-//        val provider: ViewModelProvider = ViewModelProviders.of(this)                                     // устарело
-        /* val provider = ViewModelProvider(this)                                                           // теперь так
-         val quizViewModel = provider[QuizViewModel::class.java]                                            // лениво инициализировали данное свойство выше
-         Log.d(TAG, "Got a QuizModel: $quizViewModel")*/
-
         trueButton = findViewById(R.id.true_button)
         falseButton = findViewById(R.id.false_button)
         nextButton = findViewById(R.id.next_button)
@@ -47,38 +42,21 @@ class MainActivity : AppCompatActivity() {
         questionTextView = findViewById(R.id.question_text_view)
 
         trueButton.setOnClickListener {
-            // какое-то действие после нажатия. Слушатель сообщает о нажатии кнопки
-            /*Toast.makeText(
-                this,
-                R.string.correct_toast,
-                Toast.LENGTH_SHORT
-            ).show()*/
             checkAnswer(true)
         }
 
         falseButton.setOnClickListener {
-            /*Toast.makeText(
-                this,
-                R.string.incorrect_toast,
-                Toast.LENGTH_SHORT
-            ).show()*/
             checkAnswer(false)
         }
 
         nextButton.setOnClickListener {
             quizViewModel.moveToNext()
-            /*val questionTextResId = questionBank[currentIndex].textResId                                  // объединяем в функцию
-        questionTextView.setText(questionTextResId)*/
             isAnswered(quizViewModel.currentIndex)
             updateQuestion()
         }
 
         prevButton.setOnClickListener {
             quizViewModel.moveToPrev()
-            /*currentIndex = when (currentIndex) {
-                in 1..questionBank.size -> currentIndex - 1
-                else -> questionBank.size - 1
-            }*/
             isAnswered(quizViewModel.currentIndex)
             updateQuestion()
         }
@@ -90,12 +68,9 @@ class MainActivity : AppCompatActivity() {
 
         questionTextView.setOnClickListener {
             quizViewModel.moveToNext()
-//            currentIndex = (currentIndex + 1) % questionBank.size
             updateQuestion()
         }
 
-        /*val questionTextResId = questionBank[currentIndex].textResId                                      // объединяем в функцию
-        questionTextView.setText(questionTextResId)*/
         updateQuestion()
     }
 
@@ -137,7 +112,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun checkAnswer(userAnswer: Boolean) {
-//        val correctAnswer = questionBank[currentIndex].answer
         val correctAnswer = quizViewModel.currentQuestionAnswer
 
         trueButton.isEnabled = false
